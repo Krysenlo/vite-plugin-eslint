@@ -1,8 +1,6 @@
 import { createLogger, Plugin } from 'vite';
 import { ESLint } from 'eslint';
 import { createFilter } from '@rollup/pluginutils';
-import { existsSync } from 'fs';
-import { resolve, normalize } from 'path';
 
 import { checkVueFile, normalizePath, Options, isFormatter } from './utils';
 
@@ -11,22 +9,19 @@ type _ESLint = typeof _eslint;
 type Constructor = new (options: ESLint.Options) => _ESLint;
 let ESLintPnpify!: Constructor;
 
-const ESLintPnpifyPath = normalize('.yarn/sdks/eslint');
-
-const regex = /(.*)[\\/]\.yarn[\\/]\$\$virtual[\\/]vite-plugin-eslint-virtual/;
-const match = regex.exec(__dirname);
-const prjpath = match?.[1] ? normalize(match?.[1]) : '';
-
-const absESLintPnpifyPath = resolve(prjpath, ESLintPnpifyPath);
-
-let isYarn2 = false;
-if (existsSync(absESLintPnpifyPath)) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const _ESLintPnpify = require(absESLintPnpifyPath);
+const isYarn2 = process.versions.pnp !== undefined;
+if (isYarn2) {
+  // do something with the PnP API ...
+  /* eslint @typescript-eslint/no-var-requires:0 */
+  const { createRequire, findPnpApi } = require('module');
+  const targetModule = __dirname; // process.argv[1];
+  const targetPnp = findPnpApi(targetModule);
+  const targetRequire = createRequire(targetModule);
+  const resolved = targetPnp.resolveRequest('eslint', targetModule);
+  const _ESLintPnpify = targetRequire(resolved);
   if (Object.prototype.hasOwnProperty.call(_ESLintPnpify, 'ESLint')) {
     ESLintPnpify = _ESLintPnpify.ESLint;
   }
-  isYarn2 = true;
 }
 
 export default function eslintPlugin(options?: Options): Plugin {
