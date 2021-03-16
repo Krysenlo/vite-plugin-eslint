@@ -28,6 +28,12 @@ export default function eslintPlugin(options?: Options): Plugin {
   const defaultOptions: Options = {
     cache: true,
     fix: false,
+    showWrap: {
+      enable: true,
+      showWhenNoERR: true,
+      clear: false,
+    },
+    showErrAsWarn: true,
   };
   const opts = options ? { ...defaultOptions, ...options } : defaultOptions;
 
@@ -83,14 +89,16 @@ export default function eslintPlugin(options?: Options): Plugin {
       const filePath = report.length > 0 ? report[0].filePath : file;
       const start = `ESLint Start: ${filePath}`;
       const end = `ESLint End: ${filePath}`;
-      const result = [start, formatter.format(report), end].join('\n');
+      const result = opts.showWrap?.enable
+        ? [start, formatter.format(report), end].join('\n')
+        : formatter.format(report);
 
       if (opts.fix && report) {
         ESLint.outputFixes(report);
       }
 
-      if (!hasWarnings && !hasErrors) {
-        logger.info(result, { clear: true });
+      if (opts.showWrap?.showWhenNoERR && !hasWarnings && !hasErrors) {
+        logger.info(result, { clear: opts.showWrap.clear });
       }
 
       if (hasWarnings) {
@@ -98,7 +106,11 @@ export default function eslintPlugin(options?: Options): Plugin {
       }
 
       if (hasErrors) {
-        this.error(result);
+        if (opts.showErrAsWarn) {
+          this.warn(result);
+        } else {
+          this.error(result);
+        }
       }
 
       return null;
