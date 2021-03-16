@@ -52,9 +52,11 @@ export default function eslintPlugin(options?: Options): Plugin {
     name: 'vite:eslint',
     async transform(_, id) {
       const file = normalizePath(id);
+
       if (!filter(id) || (await eslint.isPathIgnored(file)) || checkVueFile(id)) {
         return null;
       }
+
       switch (typeof opts.formatter) {
         case 'string':
           formatter = await eslint.loadFormatter(opts.formatter);
