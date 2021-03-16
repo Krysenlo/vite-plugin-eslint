@@ -12,7 +12,8 @@
   ],
   "workspaces": [
     ".",
-    "example"
+    "example",
+    "vscode-extension-problemmatcher"
   ],
   "scripts": {
     "commit": "cz",
