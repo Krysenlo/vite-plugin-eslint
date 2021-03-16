@@ -25,3 +25,14 @@ export function checkVueFile(id: string): boolean {
 
   return qs.parse(rawQuery).vue !== null ? true : false;
 }
+
+export function isFormatter(object: Options['formatter']): object is ESLint.Formatter {
+  switch (typeof object) {
+    case 'object':
+      return 'format' in object;
+    case 'string':
+    case 'undefined':
+    default:
+      return false;
+  }
+}

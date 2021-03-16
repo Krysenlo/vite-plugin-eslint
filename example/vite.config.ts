@@ -8,6 +8,7 @@ export default defineConfig({
     eslint({
       cache: false,
       fix: false,
+      formatter: 'visualstudio',
       include: ['./*.ts', './*.vue'],
     }),
   ],
