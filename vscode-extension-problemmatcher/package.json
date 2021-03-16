@@ -1,0 +1,78 @@
+{
+  "name": "vite-plugin-eslint-problemmatcher",
+  "displayName": "vite-plugin-eslint-problemMatcher",
+  "description": "VSCode problemMatcher for vite-plugin-eslint",
+  "publisher": "krysenlo",
+  "repository": {
+    "type": "git",
+    "directory": "vscode-extension-problemmatcher",
+    "url": "https://github.com/Krysenlo/vite-plugin-eslint"
+  },
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "categories": [
+    "Linters"
+  ],
+  "contributes": {
+    "problemMatchers": [
+      {
+        "name": "vite-eslint-visualstudio",
+        "owner": "typescript",
+        "source": "eslint",
+        "fileLocation": "autoDetect",
+        "pattern": [
+          {
+            "regexp": "^([a-zA-Z]:([\\\\\\/][.\\-\\w\\u4e00-\\u9fa5\\(\\)\\[\\]\\{\\}`~!@#$%^&]+[.\\-`~!@#$%^&\\(\\)\\[\\]\\{\\}\\s\\w\\u4e00-\\u9fa5]+)+([\\\\\\/][.\\-`~!@#$%^&\\w\\u4e00-\\u9fa5.\\(\\)\\[\\]\\{\\}]([.]*[.\\-`~!@#$%^&\\w\\s\\(\\)\\[\\]\\{\\}\\u4e00-\\u9fa5])+)+)\\((\\d+),(\\d+)\\):\\s*(info|warning|error)\\s*([^:]*)\\s*:\\s*(.*)",
+            "file": 1,
+            "line": 5,
+            "column": 6,
+            "severity": 7,
+            "code": 8,
+            "message": 9
+          }
+        ],
+        "background": {
+          "activeOnStart": false,
+          "beginsPattern": {
+            "regexp": "ESLint Start:\\s*(.*)",
+            "file": 1
+          },
+          "endsPattern": {
+            "regexp": "ESLint End:\\s*(.*)",
+            "file": 1
+          }
+        }
+      },
+      {
+        "name": "vite-esbuild",
+        "owner": "typescript",
+        "source": "esbuild",
+        "fileLocation": "autoDetect",
+        "pattern": [
+          {
+            "regexp": "^([a-zA-Z]:([\\\\\\/][.\\-\\w\\u4e00-\\u9fa5\\(\\)\\[\\]\\{\\}`~!@#$%^&]+[.\\-`~!@#$%^&\\(\\)\\[\\]\\{\\}\\s\\w\\u4e00-\\u9fa5]+)+([\\\\\\/][.\\-`~!@#$%^&\\w\\u4e00-\\u9fa5.\\(\\)\\[\\]\\{\\}]([.]*[.\\-`~!@#$%^&\\w\\s\\(\\)\\[\\]\\{\\}\\u4e00-\\u9fa5])+)+)\\s*:\\s*(\\d+):(\\d+):\\s*(info|warning|error):\\s*(.*)",
+            "file": 1,
+            "line": 5,
+            "column": 6,
+            "severity": 7,
+            "message": 8
+          }
+        ],
+        "background": {
+          "beginsPattern": {
+            "regexp": "\\[vite\\] Internal server error: "
+          },
+          "endsPattern": {
+            "regexp": "Plugin: vite:esbuild"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "build": "vsce package",
+    "install-ext": "code --install-extension vite-plugin-eslint-problemmatcher*.vsix"
+  }
+}

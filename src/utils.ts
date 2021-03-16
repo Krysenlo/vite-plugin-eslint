@@ -12,6 +12,20 @@ export interface Options {
   exclude?: string | string[];
   /** custom error formatter or the name of a built-in formatter. */
   formatter?: string | ESLint.Formatter;
+  /** Show `ESLint Start: ${filePath}` and `ESLint End: ${filePath}`
+   * around the formatter's output.*/
+  showWrap?: {
+    enable: boolean;
+    /** Show wrap message even if there is no error
+     * (*help VSCode problemMatcher to clear problems in problem panel*) )
+     */
+    showWhenNoERR?: boolean;
+    clear?: boolean;
+  };
+  /** If show err in vite, vite will stop lint other files.
+   *  Set this to true, all files will be lint.
+   */
+  showErrAsWarn?: boolean;
 }
 
 export function normalizePath(id: string): string {
@@ -24,4 +38,15 @@ export function checkVueFile(id: string): boolean {
   const rawQuery = id.split('?', 2)[1];
 
   return qs.parse(rawQuery).vue !== null ? true : false;
+}
+
+export function isFormatter(object: Options['formatter']): object is ESLint.Formatter {
+  switch (typeof object) {
+    case 'object':
+      return 'format' in object;
+    case 'string':
+    case 'undefined':
+    default:
+      return false;
+  }
 }
